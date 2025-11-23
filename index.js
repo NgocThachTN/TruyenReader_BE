@@ -15,7 +15,7 @@ const authRoute = require("./src/routes/auth.routes");
 const userRoute = require("./src/routes/user.routes");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Enable CORS
 app.use(cors());
