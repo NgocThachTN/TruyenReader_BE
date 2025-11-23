@@ -37,6 +37,15 @@ const swaggerOptions = {
         url: process.env.NODE_ENV === 'production' ? (process.env.RENDER_EXTERNAL_URL || 'https://nodejs-test-api-o7bd.onrender.com') : "http://localhost:3000",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   apis: ["./index.js", "./src/routes/*.js"],
 };

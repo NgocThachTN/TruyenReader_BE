@@ -22,9 +22,9 @@ class UserController {
 
     async updateUser(req, res) {
         try {
-            const { id } = req.params;
+            const { userId } = req.params;
             const updates = req.body;
-            const user = await userService.updateUser(id, updates);
+            const user = await userService.updateUser(userId, updates);
             res.status(200).json({ user });
         } catch (err) {
             res.status(400).json({ message: err.message });
@@ -33,8 +33,8 @@ class UserController {
 
     async deleteUser(req, res) {
         try {
-            const { id } = req.params;
-            const result = await userService.deleteUser(id);
+            const { userId } = req.params;
+            const result = await userService.deleteUser(userId);
             res.status(200).json(result);
         } catch (err) {
             res.status(400).json({ message: err.message });

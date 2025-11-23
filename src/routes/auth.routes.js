@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const controller = require("../controllers/auth.controllers");
+const { authenticate } = require("../middlewares/auth.middleware");
 
 /**
  * @swagger
@@ -56,5 +57,85 @@ router.post("/register", controller.register);
  *         description: Sai thông tin đăng nhập
  */
 router.post("/login", controller.login);
+
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     tags: ["Authentication"]
+ *     summary: Quên mật khẩu
+ *     description: Gửi email reset mật khẩu
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Email đã được gửi
+ *       400:
+ *         description: Lỗi
+ */
+router.post("/forgot-password", controller.forgotPassword);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *     tags: ["Authentication"]
+ *     summary: Reset mật khẩu
+ *     description: Đặt lại mật khẩu với token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Mật khẩu đã được reset
+ *       400:
+ *         description: Lỗi
+ */
+router.post("/reset-password", controller.resetPassword);
+
+/**
+ * @swagger
+ * /api/auth/change-password:
+ *   post:
+ *     tags: ["Authentication"]
+ *     summary: Đổi mật khẩu
+ *     description: Đổi mật khẩu cho user đã đăng nhập (cần JWT token)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Mật khẩu đã được đổi
+ *       400:
+ *         description: Lỗi
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/change-password", authenticate, controller.changePassword);
 
 module.exports = router;

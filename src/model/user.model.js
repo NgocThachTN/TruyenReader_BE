@@ -5,7 +5,7 @@ const sequelize = require("../config/database");  // Lấy đúng instance
 const User = sequelize.define(
   "User",
   {
-    id: {
+    userId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,

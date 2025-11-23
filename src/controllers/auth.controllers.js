@@ -26,6 +26,37 @@ class AuthController {
             res.status(401).json({ message: err.message });
         }
     }
+
+    async forgotPassword(req, res) {
+        try {
+            const { email } = req.body;
+            await authService.forgotPassword(email);
+            res.json({ message: "Email reset mật khẩu đã được gửi" });
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+
+    async resetPassword(req, res) {
+        try {
+            const { token, newPassword } = req.body;
+            await authService.resetPassword(token, newPassword);
+            res.json({ message: "Mật khẩu đã được reset" });
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+
+    async changePassword(req, res) {
+        try {
+            const { oldPassword, newPassword } = req.body;
+            const userId = req.user.userId;
+            await authService.changePassword(userId, oldPassword, newPassword);
+            res.json({ message: "Mật khẩu đã được đổi" });
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
 }
 
 module.exports = new AuthController();

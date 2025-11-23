@@ -34,9 +34,16 @@
    DB_PASS=your_db_password
    DB_HOST=localhost
    DB_PORT=5432
+   JWT_SECRET=your_jwt_secret_key
+   EMAIL_USER=your_email@gmail.com
+   EMAIL_PASS=your_email_password
+   FRONTEND_URL=http://localhost:3000
    ```
 
    Thay thế `your_db_user` và `your_db_password` bằng thông tin đăng nhập PostgreSQL của bạn.
+   `JWT_SECRET` là khóa bí mật cho JWT.
+   `EMAIL_USER` và `EMAIL_PASS` cho gửi email (sử dụng Gmail app password).
+   `FRONTEND_URL` là URL của frontend để tạo link reset.
 
    Nếu muốn sử dụng SQLite thay vì PostgreSQL, bạn có thể sửa file `src/config/database.js` để sử dụng SQLite.
 
@@ -53,9 +60,11 @@
 
 ## API Endpoints
 
-- `GET /api/hello` - API chào đơn giản
 - `POST /api/auth/login` - Đăng nhập
 - `POST /api/auth/register` - Đăng ký
+- `POST /api/auth/forgot-password` - Quên mật khẩu
+- `POST /api/auth/reset-password` - Reset mật khẩu
+- `POST /api/auth/change-password` - Đổi mật khẩu (cần JWT token)
 - `GET /api/users` - Lấy danh sách người dùng (cần xác thực)
 - Các endpoint khác được mô tả trong Swagger Docs.
 
@@ -68,6 +77,8 @@ src/
 ├── controllers/
 │   ├── auth.controllers.js  # Controller cho authentication
 │   └── user.controllers.js  # Controller cho user
+├── middlewares/
+│   └── auth.middleware.js   # Middleware xác thực JWT
 ├── model/
 │   └── user.model.js        # Model User
 ├── routes/
@@ -75,6 +86,7 @@ src/
 │   └── user.routes.js       # Routes cho user
 ├── services/
 │   ├── auth.services.js     # Service logic cho auth
+│   ├── mail.services.js     # Service gửi email
 │   └── user.services.js     # Service logic cho user
 └── utils/                   # Các tiện ích
 ```

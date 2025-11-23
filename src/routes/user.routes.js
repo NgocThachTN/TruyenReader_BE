@@ -18,7 +18,7 @@ const userController = require("../controllers/user.controllers");
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
+ *                   userId:
  *                     type: integer
  *                   email:
  *                     type: string
@@ -57,13 +57,13 @@ router.post("/", userController.createUser);
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/users/{userId}:
  *   put:
  *     tags: ["User"]
  *     summary: Cập nhật user
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: integer
@@ -88,7 +88,7 @@ router.post("/", userController.createUser);
  *     summary: Xóa user
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: integer
@@ -98,7 +98,7 @@ router.post("/", userController.createUser);
  *       400:
  *         description: Lỗi khi xóa user
  */
-router.put("/:id", userController.updateUser);
-router.delete("/:id", userController.deleteUser);
+router.put("/:userId", userController.updateUser);
+router.delete("/:userId", userController.deleteUser);
 
 module.exports = router;
