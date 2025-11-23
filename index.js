@@ -65,8 +65,8 @@ app.get("/api/auth", (req, res) => {
 // ------------------ SYNC DB ----------------------
 sequelize
   .sync({ alter: true })
-  .then(() => console.log("🔥 DB synced!"))
-  .catch((err) => console.error("❌ DB error:", err));
+  .then(() => console.log(" DB synced!"))
+  .catch((err) => console.error("DB error:", err));
 
 // ------------------ START SERVER -----------------
 app.listen(port, () => {

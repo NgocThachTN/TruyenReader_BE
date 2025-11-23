@@ -30,7 +30,75 @@ const userController = require("../controllers/user.controllers");
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
+ *   post:
+ *     tags: ["User"]
+ *     summary: Tạo user mới
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               fullname:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User đã được tạo
+ *       400:
+ *         description: Lỗi khi tạo user
  */
 router.get("/", userController.getUsers);
+router.post("/", userController.createUser);
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     tags: ["User"]
+ *     summary: Cập nhật user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fullname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User đã được cập nhật
+ *       400:
+ *         description: Lỗi khi cập nhật user
+ *   delete:
+ *     tags: ["User"]
+ *     summary: Xóa user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User đã được xóa
+ *       400:
+ *         description: Lỗi khi xóa user
+ */
+router.put("/:id", userController.updateUser);
+router.delete("/:id", userController.deleteUser);
 
 module.exports = router;
