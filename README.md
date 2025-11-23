@@ -65,7 +65,14 @@
 - `POST /api/auth/forgot-password` - Quên mật khẩu (gửi OTP qua email)
 - `POST /api/auth/reset-password` - Reset mật khẩu với OTP
 - `POST /api/auth/change-password` - Đổi mật khẩu (cần JWT token)
+- `GET /api/auth/google` - Đăng nhập với Google
+- `GET /api/auth/google/callback` - Callback từ Google
 - `GET /api/users` - Lấy danh sách người dùng (cần xác thực)
+- `POST /api/comments` - Thêm comment (cần JWT)
+- `GET /api/comments/{comicId}` - Lấy comments cho truyện
+- `POST /api/favorites` - Thêm vào yêu thích (cần JWT)
+- `GET /api/favorites` - Lấy danh sách yêu thích (cần JWT)
+- `DELETE /api/favorites/{comicId}` - Xóa khỏi yêu thích (cần JWT)
 - Các endpoint khác được mô tả trong Swagger Docs.
 
 ## Cấu trúc dự án
@@ -76,16 +83,24 @@ src/
 │   └── database.js          # Cấu hình kết nối DB
 ├── controllers/
 │   ├── auth.controllers.js  # Controller cho authentication
+│   ├── comment.controllers.js  # Controller cho comments
+│   ├── favorite.controllers.js  # Controller cho favorites
 │   └── user.controllers.js  # Controller cho user
 ├── middlewares/
 │   └── auth.middleware.js   # Middleware xác thực JWT
 ├── model/
+│   ├── comment.model.js     # Model Comment
+│   ├── favorite.model.js    # Model Favorite
 │   └── user.model.js        # Model User
 ├── routes/
 │   ├── auth.routes.js       # Routes cho auth
+│   ├── comment.routes.js    # Routes cho comments
+│   ├── favorite.routes.js   # Routes cho favorites
 │   └── user.routes.js       # Routes cho user
 ├── services/
 │   ├── auth.services.js     # Service logic cho auth
+│   ├── comment.services.js  # Service cho comments
+│   ├── favorite.services.js # Service cho favorites
 │   ├── mail.services.js     # Service gửi email
 │   └── user.services.js     # Service logic cho user
 └── utils/                   # Các tiện ích

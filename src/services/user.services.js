@@ -6,6 +6,7 @@ class UserService {
         try {
             const users = await User.findAll({
                 attributes: { exclude: ['passwordHash'] }, // Ẩn passwordHash
+
             });
             return users;
         } catch (error) {
