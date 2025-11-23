@@ -19,6 +19,8 @@ const controller = require("../controllers/auth.controllers");
  *                 type: string
  *               password:
  *                 type: string
+ *               confirmpassword:
+ *                 type: string
  *               fullname:
  *                 type: string
  *     responses:

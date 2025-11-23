@@ -10,8 +10,8 @@ const sequelize = require("./src/config/database");
 require("./src/model/user.model");
 
 // Import routes
-const authRoute = require("./src/routes/auth.route");
-
+const authRoute = require("./src/routes/auth.routes");
+const userRoute = require("./src/routes/user.routes");
 
 const app = express();
 const port = 3000;
@@ -44,6 +44,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ------------------ ROUTES ----------------------
 app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute); 
 // Example Hello API
 /**
  * @swagger
