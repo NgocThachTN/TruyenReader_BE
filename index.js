@@ -34,9 +34,9 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Demo API với Swagger",
+      title: "TruyenReader API",
       version: "1.0.0",
-      description: "API demo dùng Node.js + Express + Swagger + PostgreSQL",
+      description: "API của TruyenReader dùng Node.js + Express + Swagger + PostgreSQL",
     },
     servers: [
       {
