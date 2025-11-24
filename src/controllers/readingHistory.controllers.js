@@ -25,9 +25,9 @@ class ReadingHistoryController {
 
     async removeReadingHistory(req, res) {
         try {
-            const { comicId } = req.params;
+            const { comicSlug } = req.params;
             const userId = req.user.userId;
-            const result = await readingHistoryService.removeReadingHistory(userId, comicId);
+            const result = await readingHistoryService.removeReadingHistory(userId, comicSlug);
             res.json(result);
         } catch (err) {
             res.status(400).json({ message: err.message });

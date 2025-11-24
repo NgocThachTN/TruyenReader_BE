@@ -52,7 +52,7 @@ router.get("/", authenticate, readingHistoryController.getReadingHistory);
 
 /**
  * @swagger
- * /api/reading-history/{comicId}:
+ * /api/reading-history/{comicSlug}:
  *   delete:
  *     tags: ["ReadingHistory"]
  *     summary: Xóa khỏi lịch sử đọc
@@ -60,7 +60,7 @@ router.get("/", authenticate, readingHistoryController.getReadingHistory);
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: comicId
+ *         name: comicSlug
  *         required: true
  *         schema:
  *           type: string
@@ -72,6 +72,6 @@ router.get("/", authenticate, readingHistoryController.getReadingHistory);
  *       401:
  *         description: Unauthorized
  */
-router.delete("/:comicId", authenticate, readingHistoryController.removeReadingHistory);
+router.delete("/:comicSlug", authenticate, readingHistoryController.removeReadingHistory);
 
 module.exports = router;

@@ -30,8 +30,8 @@ class ReadingHistoryService {
         return histories;
     }
 
-    async removeReadingHistory(userId, comicId) {
-        const history = await ReadingHistory.findOne({ where: { userId, comicId } });
+    async removeReadingHistory(userId, comicSlug) {
+        const history = await ReadingHistory.findOne({ where: { userId, comicSlug } });
         if (!history) throw new Error("Không tìm thấy trong lịch sử");
 
         await history.destroy();
