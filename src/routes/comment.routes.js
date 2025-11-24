@@ -21,6 +21,8 @@ const { authenticate } = require("../middlewares/auth.middleware");
  *             properties:
  *               comicId:
  *                 type: string
+ *               comicSlug:
+ *                 type: string
  *               content:
  *                 type: string
  *     responses:

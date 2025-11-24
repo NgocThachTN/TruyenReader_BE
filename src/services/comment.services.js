@@ -3,10 +3,11 @@ const Comment = require("../model/comment.model");
 const User = require("../model/user.model");
 
 class CommentService {
-    async addComment(userId, comicId, content) {
+    async addComment(userId, comicId, comicSlug, content) {
         const comment = await Comment.create({
             userId,
             comicId,
+            comicSlug,
             content,
         });
         return comment;

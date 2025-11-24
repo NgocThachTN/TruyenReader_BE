@@ -18,6 +18,10 @@ const Comment = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        comicSlug: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         content: {
             type: DataTypes.TEXT,
             allowNull: false,
