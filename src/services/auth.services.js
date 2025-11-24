@@ -55,8 +55,10 @@ class AuthService {
         await user.update({ otp, otpExpires });
 
         console.log(`Sending OTP ${otp} to ${email}`);
-        await sendResetEmail(email, `Mã OTP của bạn là: ${otp}. Mã này hết hạn sau 10 phút.`);
-        console.log(`OTP sent to ${email}`);
+        sendResetEmail(email, `Mã OTP của bạn là: ${otp}. Mã này hết hạn sau 10 phút.`)
+          .then(() => console.log(`OTP sent to ${email}`))
+          .catch(err => console.error(`Failed to send OTP to ${email}:`, err));
+        // Don't await, return immediately
     }
 
     async resetPassword(email, otp, newPassword) {
