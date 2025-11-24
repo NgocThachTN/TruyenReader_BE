@@ -16,8 +16,8 @@ class AuthService {
             fullname,
         });
 
-        // Trả về user mà không có passwordHash
-        const { passwordHash, ...userWithoutPassword } = user.toJSON();
+        // Trả về user mà không có passwordHash, otp, otpExpires
+        const { passwordHash, otp, otpExpires, ...userWithoutPassword } = user.toJSON();
         return userWithoutPassword;
     }
 
@@ -39,6 +39,8 @@ class AuthService {
 
         const userData = user.toJSON();
         delete userData.passwordHash;
+        delete userData.otp;
+        delete userData.otpExpires;
 
         return { token, user: userData };
     }

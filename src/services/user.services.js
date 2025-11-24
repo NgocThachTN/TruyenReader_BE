@@ -5,10 +5,15 @@ class UserService {
     async getAllUsers() {
         try {
             const users = await User.findAll({
-                attributes: { exclude: ['passwordHash'] }, // Ẩn passwordHash
-
+                attributes: { exclude: ['passwordHash', 'otp', 'otpExpires'] }
             });
-            return users;
+            // Chuyển thành JSON và loại bỏ otp nếu cần
+            return users.map(user => {
+                const data = user.toJSON();
+                delete data.otp;
+                delete data.otpExpires;
+                return data;
+            });
         } catch (error) {
             throw new Error(`Lỗi khi lấy danh sách user: ${error.message}`);
         }
@@ -67,6 +72,21 @@ class UserService {
             return { message: "User đã được xóa" };
         } catch (error) {
             throw new Error(`Lỗi khi xóa user: ${error.message}`);
+        }
+    }
+
+    async getUserById(userId) {
+        try {
+            const user = await User.findByPk(userId, {
+                attributes: { exclude: ['passwordHash', 'otp', 'otpExpires'] }
+            });
+            if (!user) throw new Error("User không tồn tại");
+            const data = user.toJSON();
+            delete data.otp;
+            delete data.otpExpires;
+            return data;
+        } catch (error) {
+            throw new Error(`Lỗi khi lấy thông tin user: ${error.message}`);
         }
     }
 }

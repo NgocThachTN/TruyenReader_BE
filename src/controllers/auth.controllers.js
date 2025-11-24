@@ -9,7 +9,6 @@ class AuthController {
             if (password !== confirmpassword) {
                 return res.status(400).json({ message: "Mật khẩu xác nhận không khớp" });
             }
-
             const user = await authService.register(email, password, fullname);
             res.status(201).json({ message: "Đăng ký thành công", user });
         } catch (err) {

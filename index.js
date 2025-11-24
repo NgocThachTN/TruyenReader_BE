@@ -102,7 +102,7 @@ sequelize
   .authenticate()
   .then(() => {
     console.log("DB connected!");
-    return sequelize.sync({ force: true });
+    return sequelize.sync({ alter: true });
   })
   .then(() => console.log("DB synced!"))
   .catch((err) => {
