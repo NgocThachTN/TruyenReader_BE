@@ -56,8 +56,8 @@ class AuthService {
 
         console.log(`Sending OTP ${otp} to ${email}`);
         sendResetEmail(email, `Mã OTP của bạn là: ${otp}. Mã này hết hạn sau 10 phút.`)
-          .then(() => console.log(`OTP sent to ${email}`))
-          .catch(err => console.error(`Failed to send OTP to ${email}:`, err));
+            .then(() => console.log(`OTP sent to ${email}`))
+            .catch(err => console.error(`Failed to send OTP to ${email}:`, err));
         // Don't await, return immediately
     }
 
