@@ -3,14 +3,23 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    port: process.env.NODE_ENV === 'production' ? 465 : 587, // Use 465 for production (Onrender), 587 for local
+    secure: process.env.NODE_ENV === 'production', // true for 465, false for 587
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS.trim(), // Trim space
+        pass: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.trim() : '',
     },
     tls: {
         rejectUnauthorized: false
+    }
+});
+
+// Test transporter on startup
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('Transporter verification failed:', error);
+    } else {
+        console.log('Transporter is ready to send emails');
     }
 });
 
@@ -81,11 +90,13 @@ const sendResetEmail = async (email, message) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Email sent to ${email}`);
+        console.log(`Attempting to send email to ${email} with subject: ${mailOptions.subject}`);
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`Email sent successfully to ${email}, messageId: ${info.messageId}`);
     } catch (error) {
-        console.error(`Error sending email to ${email}:`, error);
-        throw new Error("Không thể gửi email");
+        console.error(`Error sending email to ${email}:`, error.message);
+        console.error('Full error:', error);
+        throw new Error("Không thể gửi email: " + error.message);
     }
 };
 
