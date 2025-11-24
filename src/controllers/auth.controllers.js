@@ -38,8 +38,8 @@ class AuthController {
 
     async resetPassword(req, res) {
         try {
-            const { email, otp, newPassword } = req.body;
-            await authService.resetPassword(email, otp, newPassword);
+            const { email, newPassword } = req.body;
+            await authService.resetPassword(email, newPassword);
             res.json({ message: "Mật khẩu đã được reset" });
         } catch (err) {
             res.status(400).json({ message: err.message });

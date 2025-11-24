@@ -99,8 +99,6 @@ router.post("/forgot-password", controller.forgotPassword);
  *             properties:
  *               email:
  *                 type: string
- *               otp:
- *                 type: string
  *               newPassword:
  *                 type: string
  *     responses:

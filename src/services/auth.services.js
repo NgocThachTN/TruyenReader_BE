@@ -61,14 +61,11 @@ class AuthService {
         // Don't await, return immediately
     }
 
-    async resetPassword(email, otp, newPassword) {
+    async resetPassword(email, newPassword) {
         const user = await User.findOne({ where: { email } });
         if (!user) throw new Error("User không tồn tại");
 
-        if (user.otp !== otp || user.otpExpires < new Date()) {
-            throw new Error("OTP không hợp lệ hoặc đã hết hạn");
-        }
-
+        // Bỏ check OTP, assume verified
         const hash = await bcrypt.hash(newPassword, 10);
         await user.update({ passwordHash: hash, otp: null, otpExpires: null });
     }
@@ -83,14 +80,14 @@ class AuthService {
 
         return { message: "OTP hợp lệ" };
     }
-        const user = await User.findByPk(userId);
-        if (!user) throw new Error("User không tồn tại");
+    const user = await User.findByPk(userId);
+    if(!user) throw new Error("User không tồn tại");
 
-        const match = await bcrypt.compare(oldPassword, user.passwordHash);
-        if (!match) throw new Error("Mật khẩu cũ không đúng");
+const match = await bcrypt.compare(oldPassword, user.passwordHash);
+if (!match) throw new Error("Mật khẩu cũ không đúng");
 
-        const hash = await bcrypt.hash(newPassword, 10);
-        await user.update({ passwordHash: hash });
+const hash = await bcrypt.hash(newPassword, 10);
+await user.update({ passwordHash: hash });
     }
 }
 
