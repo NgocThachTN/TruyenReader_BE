@@ -4,9 +4,9 @@ const favoriteService = require("../services/favorite.services");
 class FavoriteController {
     async addFavorite(req, res) {
         try {
-            const { comicId, comicName, comicThumb } = req.body;
+            const { comicId, comicSlug, comicName, comicThumb } = req.body;
             const userId = req.user.userId;
-            const favorite = await favoriteService.addFavorite(userId, comicId, comicName, comicThumb);
+            const favorite = await favoriteService.addFavorite(userId, comicId, comicSlug, comicName, comicThumb);
             res.status(201).json({ favorite });
         } catch (err) {
             res.status(400).json({ message: err.message });

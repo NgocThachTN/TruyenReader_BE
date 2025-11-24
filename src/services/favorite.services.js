@@ -2,13 +2,14 @@
 const Favorite = require("../model/favorite.model");
 
 class FavoriteService {
-    async addFavorite(userId, comicId, comicName, comicThumb) {
+    async addFavorite(userId, comicId, comicSlug, comicName, comicThumb) {
         const existing = await Favorite.findOne({ where: { userId, comicId } });
         if (existing) throw new Error("Đã thêm vào yêu thích");
 
         const favorite = await Favorite.create({
             userId,
             comicId,
+            comicSlug,
             comicName,
             comicThumb,
         });

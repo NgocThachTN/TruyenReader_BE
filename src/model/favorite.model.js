@@ -18,6 +18,10 @@ const Favorite = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        comicSlug: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         comicName: {
             type: DataTypes.STRING,
         },
