@@ -15,8 +15,8 @@ class CommentController {
 
     async getComments(req, res) {
         try {
-            const { comicId } = req.params;
-            const comments = await commentService.getComments(comicId);
+            const { comicSlug } = req.params;
+            const comments = await commentService.getComments(comicSlug);
             res.json({ comments });
         } catch (err) {
             res.status(500).json({ message: err.message });

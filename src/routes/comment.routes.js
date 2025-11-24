@@ -37,13 +37,13 @@ router.post("/", authenticate, commentController.addComment);
 
 /**
  * @swagger
- * /api/comments/{comicId}:
+ * /api/comments/{comicSlug}:
  *   get:
  *     tags: ["Comment"]
  *     summary: Lấy comments cho truyện
  *     parameters:
  *       - in: path
- *         name: comicId
+ *         name: comicSlug
  *         required: true
  *         schema:
  *           type: string
@@ -53,6 +53,6 @@ router.post("/", authenticate, commentController.addComment);
  *       500:
  *         description: Lỗi
  */
-router.get("/:comicId", commentController.getComments);
+router.get("/:comicSlug", commentController.getComments);
 
 module.exports = router;

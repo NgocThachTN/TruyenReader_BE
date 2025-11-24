@@ -13,9 +13,9 @@ class CommentService {
         return comment;
     }
 
-    async getComments(comicId) {
+    async getComments(comicSlug) {
         const comments = await Comment.findAll({
-            where: { comicId },
+            where: { comicSlug },
             include: [{
                 model: User,
                 as: 'user',
