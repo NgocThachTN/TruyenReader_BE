@@ -177,12 +177,14 @@ router.get("/google/callback",
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
       );
-      // Redirect to FE with token, or return JSON
-      res.json({ message: "Đăng nhập Google thành công", token, user: req.user });
+
+      // Redirect to FE with token
+      const feUrl = process.env.NODE_ENV === 'production'
+        ? process.env.FE_URL || 'https://your-fe-domain.com'  // Thay bằng FE production URL
+        : 'http://localhost:3000';  // Thay bằng FE local port
+      res.redirect(`${feUrl}?token=${token}`);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   }
-);
-
-module.exports = router;
+); module.exports = router;
