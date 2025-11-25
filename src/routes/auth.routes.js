@@ -184,10 +184,35 @@ router.get("/google", passport.authenticate('google', { scope: ['https://www.goo
  *   get:
  *     tags: ["Authentication"]
  *     summary: Callback từ Google
- *     description: Xử lý callback từ Google và trả JWT
+ *     description: Xử lý callback từ Google và trả JWT cùng thông tin user
  *     responses:
  *       200:
  *         description: Đăng nhập thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Đăng nhập Google thành công"
+ *                 token:
+ *                   type: string
+ *                   example: "jwt_token_here"
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: integer
+ *                       example: 1
+ *                     email:
+ *                       type: string
+ *                       example: "user@gmail.com"
+ *                     fullname:
+ *                       type: string
+ *                       example: "Nguyễn Văn A"
+ *       302:
+ *         description: Redirect về FE với token và user info
  *       500:
  *         description: Lỗi
  */
@@ -202,11 +227,30 @@ router.get("/google/callback",
         { expiresIn: "1d" }
       );
 
-      // Redirect to FE with token
+      // Lấy thông tin user để trả về
+      const userData = {
+        userId: req.user.userId,
+        email: req.user.email,
+        fullname: req.user.fullname
+      };
+
+      // Nếu là API call (không phải browser redirect), trả về JSON
+      if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.json({
+          message: "Đăng nhập Google thành công",
+          token,
+          user: userData
+        });
+      }
+
+      // Redirect to FE with token và user info
       const feUrl = process.env.NODE_ENV === 'production'
         ? process.env.FE_URL || 'https://your-fe-domain.com'  // Thay bằng FE production URL
         : 'http://localhost:3000';  // Thay bằng FE local port
-      res.redirect(`${feUrl}?token=${token}`);
+
+      // Encode user info để truyền qua URL
+      const userInfo = encodeURIComponent(JSON.stringify(userData));
+      res.redirect(`${feUrl}?token=${token}&user=${userInfo}`);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
