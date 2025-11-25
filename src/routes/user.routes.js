@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controllers");
+const { authenticate, authorizeAdmin } = require("../middlewares/auth.middleware");
 
 /**
  * @swagger
@@ -8,6 +9,8 @@ const userController = require("../controllers/user.controllers");
  *   get:
  *     tags: ["User"]
  *     summary: Lấy danh sách tất cả user
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Danh sách user
@@ -24,15 +27,24 @@ const userController = require("../controllers/user.controllers");
  *                     type: string
  *                   fullname:
  *                     type: string
+ *                   role:
+ *                     type: string
+ *                     enum: [user, admin]
  *                   createdAt:
  *                     type: string
  *                     format: date-time
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
+ *       401:
+ *         description: Chưa đăng nhập
+ *       403:
+ *         description: Không có quyền admin
  *   post:
  *     tags: ["User"]
  *     summary: Tạo user mới
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -51,9 +63,13 @@ const userController = require("../controllers/user.controllers");
  *         description: User đã được tạo
  *       400:
  *         description: Lỗi khi tạo user
+ *       401:
+ *         description: Chưa đăng nhập
+ *       403:
+ *         description: Không có quyền admin
  */
-router.get("/", userController.getUsers);
-router.post("/", userController.createUser);
+router.get("/", authenticate, authorizeAdmin, userController.getUsers);
+router.post("/", authenticate, authorizeAdmin, userController.createUser);
 
 /**
  * @swagger
@@ -61,6 +77,8 @@ router.post("/", userController.createUser);
  *   put:
  *     tags: ["User"]
  *     summary: Cập nhật user
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -83,9 +101,15 @@ router.post("/", userController.createUser);
  *         description: User đã được cập nhật
  *       400:
  *         description: Lỗi khi cập nhật user
+ *       401:
+ *         description: Chưa đăng nhập
+ *       403:
+ *         description: Không có quyền admin
  *   delete:
  *     tags: ["User"]
  *     summary: Xóa user
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -97,8 +121,12 @@ router.post("/", userController.createUser);
  *         description: User đã được xóa
  *       400:
  *         description: Lỗi khi xóa user
+ *       401:
+ *         description: Chưa đăng nhập
+ *       403:
+ *         description: Không có quyền admin
  */
-router.put("/:userId", userController.updateUser);
-router.delete("/:userId", userController.deleteUser);
+router.put("/:userId", authenticate, authorizeAdmin, userController.updateUser);
+router.delete("/:userId", authenticate, authorizeAdmin, userController.deleteUser);
 
 module.exports = router;
