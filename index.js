@@ -169,9 +169,10 @@ app.use("/api/reading-history", readingHistoryRoute);
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Xin chào từ API!" });
 });
+
 app.get("/api/auth", (req, res) => {
   res.json({ message: "Auth route working!" });
-})
+});
 // ------------------ SYNC DB ----------------------
 sequelize
   .authenticate()

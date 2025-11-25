@@ -13,6 +13,29 @@ class CommentController {
         }
     }
 
+    async updateComment(req, res) {
+        try {
+            const { commentId } = req.params;
+            const { content } = req.body;
+            const userId = req.user.userId;
+            const comment = await commentService.updateComment(commentId, userId, content);
+            res.json({ comment });
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+
+    async deleteComment(req, res) {
+        try {
+            const { commentId } = req.params;
+            const userId = req.user.userId;
+            const result = await commentService.deleteComment(commentId, userId);
+            res.json(result);
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+
     async getComments(req, res) {
         try {
             const { comicSlug } = req.params;

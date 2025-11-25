@@ -1,4 +1,4 @@
-# Node.js Test Project
+# TruyenReader Back End Project
 
 Đây là dự án demo API sử dụng Node.js, Express, Sequelize, PostgreSQL, JWT và Swagger cho ứng dụng đọc truyện.
 
@@ -111,7 +111,7 @@
 
 ### Comments
 - `POST /api/comments` - Thêm comment (cần JWT)
-- `GET /api/comments/{comicId}` - Lấy comments cho truyện
+- `GET /api/comments/{comicSlug}` - Lấy comments cho truyện
 - `PUT /api/comments/{commentId}` - Cập nhật comment (cần JWT)
 - `DELETE /api/comments/{commentId}` - Xóa comment (cần JWT)
 

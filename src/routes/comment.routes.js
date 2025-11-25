@@ -37,6 +37,67 @@ router.post("/", authenticate, commentController.addComment);
 
 /**
  * @swagger
+ * /api/comments/{commentId}:
+ *   put:
+ *     tags: ["Comment"]
+ *     summary: Cập nhật comment
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Comment đã được cập nhật
+ *       400:
+ *         description: Lỗi
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Không có quyền sửa comment này
+ */
+router.put("/:commentId", authenticate, commentController.updateComment);
+
+/**
+ * @swagger
+ * /api/comments/{commentId}:
+ *   delete:
+ *     tags: ["Comment"]
+ *     summary: Xóa comment
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Comment đã được xóa
+ *       400:
+ *         description: Lỗi
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Không có quyền xóa comment này
+ */
+router.delete("/:commentId", authenticate, commentController.deleteComment);
+
+/**
+ * @swagger
  * /api/comments/{comicSlug}:
  *   get:
  *     tags: ["Comment"]
