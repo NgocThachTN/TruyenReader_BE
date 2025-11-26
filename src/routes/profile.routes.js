@@ -74,6 +74,9 @@ const { authenticate } = require("../middlewares/auth.middleware");
  *                       lastReadAt:
  *                         type: string
  *                         format: date-time
+ *                 isOnline:
+ *                   type: boolean
+ *                   description: Trạng thái online của user
  *       401:
  *         description: Chưa đăng nhập
  *       500:
@@ -235,6 +238,9 @@ const { authenticate } = require("../middlewares/auth.middleware");
  *                       lastReadAt:
  *                         type: string
  *                         format: date-time
+ *                 isOnline:
+ *                   type: boolean
+ *                   description: Trạng thái online của user
  *       404:
  *         description: User không tồn tại
  *       500:

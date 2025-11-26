@@ -3,6 +3,7 @@ const FavoriteService = require("./favorite.services");
 const ReadingHistoryService = require("./readingHistory.services");
 const firebaseConfig = require("../config/firebase");
 const { v4: uuidv4 } = require('uuid');
+const { isUserOnline } = require("../utils/onlineUsers");
 
 class ProfileService {
     async getProfileById(userId) {
@@ -17,10 +18,12 @@ class ProfileService {
 
             const favorites = await FavoriteService.getFavorites(userId);
             const readingHistory = await ReadingHistoryService.getReadingHistory(userId);
+            const isOnline = isUserOnline(userId);
             return {
                 user: userData,
                 favorites,
-                readingHistory
+                readingHistory,
+                isOnline
             };
         } catch (error) {
             throw new Error(`Lỗi khi lấy profile: ${error.message}`);
