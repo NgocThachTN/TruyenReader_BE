@@ -50,5 +50,6 @@ class UserController {
             res.status(404).json({ message: err.message });
         }
     }
+}
 
 module.exports = new UserController();
