@@ -1,7 +1,5 @@
 const User = require("../model/user.model");
 const bcrypt = require("bcrypt");
-const FavoriteService = require("./favorite.services");
-const ReadingHistoryService = require("./readingHistory.services");
 
 class UserService {
     async getAllUsers() {
@@ -89,21 +87,6 @@ class UserService {
             return data;
         } catch (error) {
             throw new Error(`Lỗi khi lấy thông tin user: ${error.message}`);
-        }
-    }
-
-    async getProfile(userId) {
-        try {
-            const user = await this.getUserById(userId);
-            const favorites = await FavoriteService.getFavorites(userId);
-            const readingHistory = await ReadingHistoryService.getReadingHistory(userId);
-            return {
-                user,
-                favorites,
-                readingHistory
-            };
-        } catch (error) {
-            throw new Error(`Lỗi khi lấy profile: ${error.message}`);
         }
     }
 }

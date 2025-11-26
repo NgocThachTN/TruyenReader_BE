@@ -40,16 +40,6 @@ class UserController {
             res.status(400).json({ message: err.message });
         }
     }
-
-    async getProfile(req, res) {
-        try {
-            const userId = req.user.userId;
-            const profile = await userService.getProfile(userId);
-            res.status(200).json(profile);
-        } catch (err) {
-            res.status(500).json({ message: err.message });
-        }
-    }
 }
 
 module.exports = new UserController();

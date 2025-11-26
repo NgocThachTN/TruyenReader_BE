@@ -22,6 +22,7 @@ const userRoute = require("./src/routes/user.routes");
 const commentRoute = require("./src/routes/comment.routes");
 const favoriteRoute = require("./src/routes/favorite.routes");
 const readingHistoryRoute = require("./src/routes/readingHistory.routes");
+const profileRoute = require("./src/routes/profile.routes");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -155,6 +156,7 @@ app.use("/api/users", userRoute);
 app.use("/api/comments", commentRoute);
 app.use("/api/favorites", favoriteRoute);
 app.use("/api/reading-history", readingHistoryRoute);
+app.use("/api/profile", profileRoute);
 // Example Hello API
 /**
  * @swagger
