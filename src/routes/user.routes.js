@@ -129,4 +129,82 @@ router.post("/", authenticate, authorizeAdmin, userController.createUser);
 router.put("/:userId", authenticate, authorizeAdmin, userController.updateUser);
 router.delete("/:userId", authenticate, authorizeAdmin, userController.deleteUser);
 
+/**
+ * @swagger
+ * /api/users/profile:
+ *   get:
+ *     tags: ["User"]
+ *     summary: Lấy profile của user hiện tại
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Thông tin profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: integer
+ *                     email:
+ *                       type: string
+ *                     fullname:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                 favorites:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       favoriteId:
+ *                         type: integer
+ *                       comicId:
+ *                         type: integer
+ *                       comicSlug:
+ *                         type: string
+ *                       comicName:
+ *                         type: string
+ *                       comicThumb:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                 readingHistory:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       historyId:
+ *                         type: integer
+ *                       comicId:
+ *                         type: integer
+ *                       comicSlug:
+ *                         type: string
+ *                       comicName:
+ *                         type: string
+ *                       comicThumb:
+ *                         type: string
+ *                       currentChapter:
+ *                         type: integer
+ *                       lastReadAt:
+ *                         type: string
+ *                         format: date-time
+ *       401:
+ *         description: Chưa đăng nhập
+ *       500:
+ *         description: Lỗi server
+ */
+router.get("/profile", authenticate, userController.getProfile);
+
 module.exports = router;
