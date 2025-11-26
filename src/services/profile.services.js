@@ -6,6 +6,30 @@ const { v4: uuidv4 } = require('uuid');
 const { isUserOnline } = require("../utils/onlineUsers");
 
 class ProfileService {
+    async getProfile(userId) {
+        try {
+            const user = await User.findByPk(userId, {
+                attributes: { exclude: ['passwordHash', 'otp', 'otpExpires'] }
+            });
+            if (!user) throw new Error("User không tồn tại");
+            const userData = user.toJSON();
+            delete userData.otp;
+            delete userData.otpExpires;
+
+            const favorites = await FavoriteService.getFavorites(userId);
+            const readingHistory = await ReadingHistoryService.getReadingHistory(userId);
+            const isOnline = isUserOnline(userId);
+            return {
+                user: userData,
+                favorites,
+                readingHistory,
+                isOnline
+            };
+        } catch (error) {
+            throw new Error(`Lỗi khi lấy profile: ${error.message}`);
+        }
+    }
+
     async getProfileById(userId) {
         try {
             const user = await User.findByPk(userId, {
