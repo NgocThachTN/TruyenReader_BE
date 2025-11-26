@@ -45,7 +45,7 @@ class CommentService {
             include: [{
                 model: User,
                 as: 'user',
-                attributes: ['fullname']
+                attributes: ['userId', 'fullname']
             }],
             order: [['createdAt', 'DESC']],
         });

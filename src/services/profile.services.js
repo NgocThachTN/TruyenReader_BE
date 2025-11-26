@@ -5,7 +5,7 @@ const firebaseConfig = require("../config/firebase");
 const { v4: uuidv4 } = require('uuid');
 
 class ProfileService {
-    async getProfile(userId) {
+    async getProfileById(userId) {
         try {
             const user = await User.findByPk(userId, {
                 attributes: { exclude: ['passwordHash', 'otp', 'otpExpires'] }

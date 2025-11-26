@@ -160,6 +160,87 @@ const { authenticate } = require("../middlewares/auth.middleware");
  *       500:
  *         description: Lỗi server
  */
+/**
+ * @swagger
+ * /api/profile/{userId}:
+ *   get:
+ *     tags: ["Profile"]
+ *     summary: Lấy profile của user theo ID
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Thông tin profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: integer
+ *                     email:
+ *                       type: string
+ *                     fullname:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                 favorites:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       favoriteId:
+ *                         type: integer
+ *                       comicId:
+ *                         type: integer
+ *                       comicSlug:
+ *                         type: string
+ *                       comicName:
+ *                         type: string
+ *                       comicThumb:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                 readingHistory:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       historyId:
+ *                         type: integer
+ *                       comicId:
+ *                         type: integer
+ *                       comicSlug:
+ *                         type: string
+ *                       comicName:
+ *                         type: string
+ *                       comicThumb:
+ *                         type: string
+ *                       currentChapter:
+ *                         type: integer
+ *                       lastReadAt:
+ *                         type: string
+ *                         format: date-time
+ *       404:
+ *         description: User không tồn tại
+ *       500:
+ *         description: Lỗi server
+ */
+router.get("/:userId", ProfileController.getProfileById);
 router.get("/", authenticate, ProfileController.getProfile);
 router.put("/", authenticate, ProfileController.updateProfile);
 router.post("/", authenticate, upload.single('avatar'), ProfileController.uploadAvatar);
