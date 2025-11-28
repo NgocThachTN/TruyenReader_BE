@@ -19,6 +19,7 @@ require("./src/model/comment.model");
 require("./src/model/favorite.model");
 require("./src/model/readingHistory.model");
 require("./src/model/message.model");
+require("./src/model/refreshToken.model");
 
 // Import routes
 const authRoute = require("./src/routes/auth.routes");
@@ -70,6 +71,7 @@ passport.use(new GoogleStrategy({
       const User = require("./src/model/user.model");
       const email = profile.emails[0].value;
       const fullname = profile.displayName;
+      const avatar = profile.photos && profile.photos[0] ? profile.photos[0].value : null;
 
       let user = await User.findOne({ where: { email } });
       if (!user) {
@@ -82,6 +84,7 @@ passport.use(new GoogleStrategy({
           email,
           passwordHash: hash,
           fullname,
+          avatar,
         });
 
         // Send email async, don't block
@@ -90,6 +93,11 @@ passport.use(new GoogleStrategy({
         sendResetEmail(email, `Mật khẩu Google login của bạn là: ${randomPassword}. Hãy đổi mật khẩu sau khi đăng nhập.`)
           .then(() => console.log(`Password sent to ${email}`))
           .catch(err => console.error(`Failed to send email to ${email}:`, err));
+      } else {
+        // Nếu user đã tồn tại, cập nhật avatar nếu chưa có
+        if (!user.avatar && avatar) {
+          await user.update({ avatar });
+        }
       }
 
       return done(null, user);

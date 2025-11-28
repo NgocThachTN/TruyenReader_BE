@@ -61,6 +61,56 @@ router.post("/login", controller.login);
 
 /**
  * @swagger
+ * /api/auth/refresh-token:
+ *   post:
+ *     tags: ["Authentication"]
+ *     summary: Refresh access token
+ *     description: Sử dụng refresh token để lấy access token mới
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Token refreshed
+ *       401:
+ *         description: Invalid refresh token
+ */
+router.post("/refresh-token", controller.refreshToken);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     tags: ["Authentication"]
+ *     summary: Đăng xuất
+ *     description: Invalidate refresh token của thiết bị hiện tại
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Đăng xuất thành công
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/logout", authenticate, controller.logout);
+
+/**
+ * @swagger
  * /api/auth/forgot-password:
  *   post:
  *     tags: ["Authentication"]
@@ -211,6 +261,9 @@ router.get("/google", passport.authenticate('google', { scope: ['https://www.goo
  *                     fullname:
  *                       type: string
  *                       example: "Nguyễn Văn A"
+ *                     avatar:
+ *                       type: string
+ *                       example: "https://lh3.googleusercontent.com/a-/avatar.jpg"
  *       302:
  *         description: Redirect về FE với token và user info
  *       500:
@@ -220,25 +273,31 @@ router.get("/google/callback",
   passport.authenticate('google', { failureRedirect: '/login' }),
   async (req, res) => {
     try {
-      const jwt = require("jsonwebtoken");
-      const token = jwt.sign(
-        { userId: req.user.userId, email: req.user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" }
-      );
+      const authService = require("../services/auth.services");
+      const RefreshToken = require("../model/refreshToken.model");
+      const { accessToken, refreshToken } = authService.generateTokens(req.user);
+
+      // Lưu refresh token
+      await RefreshToken.create({
+        token: refreshToken,
+        userId: req.user.userId,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
 
       // Lấy thông tin user để trả về
       const userData = {
         userId: req.user.userId,
         email: req.user.email,
-        fullname: req.user.fullname
+        fullname: req.user.fullname,
+        avatar: req.user.avatar
       };
 
       // Nếu là API call (không phải browser redirect), trả về JSON
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.json({
           message: "Đăng nhập Google thành công",
-          token,
+          accessToken,
+          refreshToken,
           user: userData
         });
       }
@@ -250,7 +309,7 @@ router.get("/google/callback",
 
       // Encode user info để truyền qua URL
       const userInfo = encodeURIComponent(JSON.stringify(userData));
-      res.redirect(`${feUrl}?token=${token}&user=${userInfo}`);
+      res.redirect(`${feUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}&user=${userInfo}`);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }

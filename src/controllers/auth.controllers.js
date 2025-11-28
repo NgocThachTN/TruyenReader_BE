@@ -26,6 +26,27 @@ class AuthController {
         }
     }
 
+    async refreshToken(req, res) {
+        try {
+            const { refreshToken } = req.body;
+            const data = await authService.refreshToken(refreshToken);
+            res.json({ message: "Token refreshed", ...data });
+        } catch (err) {
+            res.status(401).json({ message: err.message });
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            const { refreshToken } = req.body;
+            const userId = req.user.userId;
+            await authService.logout(userId, refreshToken);
+            res.json({ message: "Đăng xuất thành công" });
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
+    }
+
     async forgotPassword(req, res) {
         try {
             const { email } = req.body;

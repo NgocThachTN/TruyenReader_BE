@@ -1,9 +1,60 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user.model");
+const RefreshToken = require("../model/refreshToken.model");
 const { sendResetEmail } = require("./mail.services");
 
 class AuthService {
+    generateTokens(user) {
+        const accessToken = jwt.sign(
+            {
+                userId: user.userId,
+                email: user.email,
+                role: user.role,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "15m" } // Short lived access token
+        );
+
+        const refreshToken = jwt.sign(
+            { userId: user.userId },
+            process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+            { expiresIn: "7d" } // Long lived refresh token
+        );
+
+        return { accessToken, refreshToken };
+    }
+
+    async refreshToken(refreshToken) {
+        try {
+            const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET);
+            const tokenRecord = await RefreshToken.findOne({
+                where: { token: refreshToken, userId: decoded.userId }
+            });
+            if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
+                throw new Error("Invalid refresh token");
+            }
+
+            const user = await User.findByPk(decoded.userId);
+            const { accessToken, refreshToken: newRefreshToken } = this.generateTokens(user);
+
+            // Xóa refresh token cũ và tạo mới
+            await tokenRecord.destroy();
+            await RefreshToken.create({
+                token: newRefreshToken,
+                userId: user.userId,
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            });
+
+            return { accessToken, refreshToken: newRefreshToken };
+        } catch (err) {
+            throw new Error("Invalid refresh token");
+        }
+    }
+
+    async logout(userId, refreshToken) {
+        await RefreshToken.destroy({ where: { token: refreshToken, userId } });
+    }
     async register(email, password, fullname) {
         const exists = await User.findOne({ where: { email } });
         if (exists) throw new Error("Email đã tồn tại");
@@ -28,22 +79,21 @@ class AuthService {
         const match = await bcrypt.compare(password, user.passwordHash);
         if (!match) throw new Error("Sai email hoặc mật khẩu");
 
-        const token = jwt.sign(
-            {
-                userId: user.userId,
-                email: user.email,
-                role: user.role,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
-        );
+        const { accessToken, refreshToken } = this.generateTokens(user);
+
+        // Lưu refresh token vào DB
+        await RefreshToken.create({
+            token: refreshToken,
+            userId: user.userId,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        });
 
         const userData = user.toJSON();
         delete userData.passwordHash;
         delete userData.otp;
         delete userData.otpExpires;
 
-        return { token, user: userData };
+        return { accessToken, refreshToken, user: userData };
     }
 
     async forgotPassword(email) {
